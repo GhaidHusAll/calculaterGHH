@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Calculator_GHH</string>
+    <string name="preference_file_key">com.example.calculator_ghh.PREFERENCE_FILE_KEY</string>
 </resources>

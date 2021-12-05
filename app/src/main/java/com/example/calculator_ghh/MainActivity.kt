@@ -1,6 +1,8 @@
 package com.example.calculator_ghh
 
 import android.annotation.SuppressLint
+import android.content.Context
+import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
@@ -8,6 +10,7 @@ import com.example.calculator_ghh.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding : ActivityMainBinding
+    private lateinit var mySharedPreferences: SharedPreferences
 
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -16,6 +19,10 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         supportActionBar?.hide()
+
+        mySharedPreferences = this.getSharedPreferences(
+            getString(R.string.preference_file_key), Context.MODE_PRIVATE)
+        binding.tvUserInput.text = mySharedPreferences.getString("userInput", "")
 
         binding.btnAdd.setOnClickListener {
             if (binding.tvUserInput.text != "") {
@@ -92,6 +99,16 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+
+    override fun onDestroy() {
+        super.onDestroy()
+        //shared preference
+        with(mySharedPreferences.edit()) {
+            putString("userInput", binding.tvUserInput.text.toString())
+            apply()
+        }
+        println("disss")
+    }
     private fun calculation(){
         var problem2 = binding.tvUserInput.text.toString().split(" ").toList().toMutableList()
         var result = 0f
@@ -171,7 +188,7 @@ class MainActivity : AppCompatActivity() {
         binding.tvUserInput.text = result.toString()
     }
 
-    fun checkCorrectForm(num:String): Boolean {
+    private fun checkCorrectForm(num:String): Boolean {
         return try {
             num.toFloat()
             true
